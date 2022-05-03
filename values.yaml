@@ -1,0 +1,96 @@
+# Default values for fiware-orion.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: fiware/orion
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "2.5.0"
+
+imagePullSecrets: []
+nameOverride: "fiware-orion"
+fullnameOverride: "fiware-orion"
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  name: fiware-orion
+  type: ClusterIP
+  port: 1026
+  multitenancy: false
+  # Enable multitenancy support in contextBroker
+  writeConcern: 0
+  # Configure write concern for MongoDB write operations: acknowledged (1) or unacknowledged (0). Default is 1.
+  notificationMode: transient
+  httpTimeout: 30000
+  disableMetrics: false
+
+mongo:
+  replicaset: false
+  # The image used by the mongo chart to deploy the replicaset
+  # image: mongo:3.2
+  # The name of the replicaset fiware-orion will attempt to connect to
+  rs: rs
+  # The name of the k8s service of the replicaset
+  dbhost: mongodb
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths: []
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 50
+  targetMemoryUtilizationPercentage: 85
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
